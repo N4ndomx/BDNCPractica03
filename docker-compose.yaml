@@ -1,0 +1,45 @@
+version: '3.1'
+services:
+
+  mongodb:
+    container_name: db-mongo
+    image: mongo:7.0.8
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=mibase
+      - MONGO_INITDB_USER=admin
+      - MONGO_INITDB_PWD=password
+
+    networks:
+      - app_net
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo:/data/db
+
+  backend:
+    container_name: backend
+    image: n4ndomx/bdncpractica03-back:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - app_net
+    depends_on:
+      - mongodb
+
+  frontend:
+    container_name: frontend-mongo
+
+    image: n4ndomx/bdncpractica03-front:latest
+    networks:
+      - app_net
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    links:
+      - backend
+
+networks:
+  app_net:
+    driver: bridge

@@ -20,6 +20,7 @@ RUN npm run build --prod
 FROM nginx:1.19.8-alpine
 # Copy the build output to replace the default nginx contents.
 COPY --from=node /usr/local/app/dist/mongo-personas /usr/share/nginx/html
+COPY nginx.config  /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
